@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ccw.workStamp.LoginMapper">
+	
+	<!--
+	 @ sns간편로그인 고유ID 값을 바탕으로 해당 사용자가 회원가입되어 있는지를 조회한다.
+       (조회결과가 있다면 APP에서는 메인페이지로 이동, 없다면 회원가입페이지로 이동) 
+     @author 조창욱
+     @version 1.0
+	  -->
+    <select id="retrieveUserInfo" resultType="com.ccw.workStamp.util.CommonMap">
+         SELECT  A.USERSEQ AS USER_SEQ
+              ,  A.SNSID AS SNS_ID
+              , A.SNSTYPE AS SNS_TYPE
+              , A.USERNM AS USER_NM
+              , A.TELNO AS TEL_NO
+              , A.EMPNO AS EMP_NO
+              , A.ADMINYN AS ADMIN_YN
+              , B.COMPNM AS COMP_NM
+              , B.TEAMNM AS TEAM_NM
+              , B.ZIPCD AS ZIP_CD
+              , B.BASICADDR AS BASIC_ADDR
+              , B.DTAILADDR AS DTAIL_ADDR
+              , ST_X(GIS) AS LONGITUDE
+              , ST_Y(GIS) AS LATITUDE
+        FROM  USERINFO A
+             ,COMPANYINFO B
+        WHERE A.COMPSEQ = B.COMPSEQ
+          AND A.SNSTYPE = #{snsType}
+          AND A.SNSID = #{snsId}
+          AND A.DELYN = 'N'
+        LIMIT 1;
+    </select>
+    
+</mapper>
