@@ -11,7 +11,7 @@ public interface LoginService {
      * @author 조창욱
      * @version 1.0
      * @param sns간편로그인 타입 및 고유ID
-     * @return 조회결과가 있다면 사용자의 주요정보가 들어있는 Map, 없다면 비어있는 Map을 반환
+     * @return 사용자일련번호, 사용자이름, 사용자사원번호, 회사주소정보(우편번호, 기본주소, 상세주소, GPS) 
      * @exception 서버가 정의한 bussinessException이 일어나는 경우 rsltCd는 -1, errMsg는 bussinessExaption의 메시지를 반환
      *            의도치 않은 Exception이 일어나는 경우 rsltCd는 -1, errMsg는 지정된 메시지를 반환 
      * 
