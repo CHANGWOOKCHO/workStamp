@@ -147,6 +147,7 @@ public class SearchAddrServiceImpl implements SearchAddrService{
             sb.append(tempStr);								// 응답결과 JSON 저장
         }
         br.close();
+        System.out.println("kakaoResponse : " + sb.toString());
         
         JSONParser parser = new JSONParser();
         Object obj = parser.parse(sb.toString());
@@ -182,7 +183,10 @@ public class SearchAddrServiceImpl implements SearchAddrService{
        
         HttpURLConnection urlConnection = null;
         InputStream dis = null;
-        
+    
+        System.out.println("commendMap : "+ commendMap);
+        System.out.println("url : "+ "https://dapi.kakao.com/v2/local/geo/coord2address.json?x="+longitude+"&y="+latitude+"&input_coord=WGS84");
+            
         URL url = new URL("https://dapi.kakao.com/v2/local/geo/coord2address.json?x="+longitude+"&y="+latitude+"&input_coord=WGS84");
         urlConnection = (HttpURLConnection)url.openConnection();
         urlConnection.setConnectTimeout(TIMEOUT_VALUE);
@@ -211,7 +215,8 @@ public class SearchAddrServiceImpl implements SearchAddrService{
             sb.append(tempStr);								// 응답결과 JSON 저장
         }
         br.close();
-       
+        System.out.println("kakaoResponse : " + sb.toString());
+        
         JSONParser parser = new JSONParser();
         Object obj = parser.parse(sb.toString());
         JSONObject jsonObj = (JSONObject) obj;
@@ -222,7 +227,10 @@ public class SearchAddrServiceImpl implements SearchAddrService{
         Map<String, Object> resultMap = new HashMap<String, Object>(); 
         Map<String, Object> roadMap = (Map<String, Object>) tempMap.get("road_address");
         Map<String, Object> jibunMap = (Map<String, Object>) tempMap.get("address");
-       
+        
+        System.out.println("roadMap : "  + roadMap);
+        System.out.println("jibunMap : "  + jibunMap);
+        
         if(roadMap == null && jibunMap == null){ //주소정보가 없을 경우
              throw new BusinessException("현재 위치에 대한 주소정보가 존재하지 않습니다.");
         }else if(roadMap == null){ //도로명 주소를 못 받아오는 경우가 지번으로 대체 있음.
