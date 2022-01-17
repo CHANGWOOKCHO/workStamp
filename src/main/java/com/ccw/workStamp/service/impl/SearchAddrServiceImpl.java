@@ -25,9 +25,9 @@ import org.json.simple.parser.JSONParser;
 @Transactional(rollbackFor = {Exception.class, BusinessException.class})
 public class SearchAddrServiceImpl implements SearchAddrService{
     
-    private static final String addrKey = "devU01TX0FVVEgyMDIxMDIwNDE3MTg0MTExMDc4MTk=";
-    private static final String kakaokey = "KakaoAK 89d1c7fb0e52d31f75afe14b77cbeff7";
-    private static final int TIMEOUT_VALUE = 5000;   // 3초
+    private static final String addrKey = "";
+    private static final String kakaokey = "";
+    private static final int TIMEOUT_VALUE = 5000;   // 5초
  
     /**
      * 입력받은 키워드를 행정안전부API로 전송하여 주소정보를 조회한다.
