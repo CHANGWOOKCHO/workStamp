@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ccw.workStamp.SignUpMapper">
+	
+	<!--
+	 @ 관리자의 회원가입 시 회사정보도 함께 등록되며 회사등록으로 생성된다.
+     @author 조창욱
+     @version 1.0
+	  -->
+    <insert id="insertCompanyInfo"  useGeneratedKeys="true" keyProperty="compSeq">
+        INSERT INTO COMPANYINFO(
+            COMPSEQ,
+        	COMPNM,
+        	TEAMNM,
+        	ZIPCD,
+        	BASICADDR,
+        	DTAILADDR,
+            GIS
+        )
+        VALUES (
+        	NULL,
+        	#{compNm},
+        	#{teamNm},
+			#{zipCd},
+			#{basicAddr},
+			#{dtailAddr},
+			POINT(#{longitude}, #{latitude})
+		);
+    </insert>
+    
+    <!--
+	 @ 해당 관리자, 사용자를 회원등록한다.
+     @author 조창욱
+     @version 1.0
+	  -->
+    <insert id="insertUserInfo" useGeneratedKeys="true" keyProperty="userSeq">
+        INSERT INTO USERINFO(
+            USERSEQ,
+            SNSID,
+        	SNSTYPE,
+        	USERNM,
+        	EMPNO,
+        	COMPSEQ,
+            ADMINYN,
+            DELYN
+        )
+        VALUES (
+            NULL,
+        	#{snsId},
+        	#{snsType},
+			#{userNm},
+			#{empNo},
+			#{compSeq},
+            #{adminYn},
+            'N'
+		);
+    </insert>
+    
+     <!--
+	 @ 회원등록 전에 해당 사용자가 기등록되어 있는지 조회한다.
+     @author 조창욱
+     @version 1.0
+	  -->
+    <select id="retrieveRegistCnt" resultType="INTEGER">
+        SELECT COUNT(*)
+          FROM USERINFO
+         WHERE SNSTYPE = #{snsType}
+           and SNSID = #{snsId}
+           and DELYN = 'N';
+    </select>
+    
+     <!--
+	 @ 입력된 조건에 맞는 등록된 회사정보를 조회한다. 현재위치(searchType == 3)로 검색 시에는 
+	 반경 200m 이내에 등록된 회사들을 찾으며, 개인정보 보호를 위해 관리자 이름의 가운데는 '*'로 블라인드 처리한다.
+     @author 조창욱
+     @version 1.0
+	  -->
+     <select id="retrieveCompanyInfo" parameterType="java.util.HashMap" resultType="com.ccw.workStamp.util.CommonMap">
+        SELECT A.COMPSEQ AS COMP_SEQ
+              ,A.COMPNM AS COMP_NM
+		      ,A.TEAMNM AS TEAM_NM
+              ,A.ZIPCD AS ZIP_CD
+		      ,A.BASICADDR AS BASIC_ADDR
+	    	  ,A.DTAILADDR AS DTAIL_ADDR
+		 	  ,(CASE CHAR_LENGTH(USERNM)
+	            WHEN 1 THEN USERNM
+	            WHEN 2 THEN CONCAT(SUBSTR(USERNM,1,1),'*') 
+	            ELSE CONCAT(SUBSTR(USERNM,1,1), REPEAT('*', CHAR_LENGTH(USERNM)-2), SUBSTR(USERNM,CHAR_LENGTH(USERNM),1)) END) AS ADMIN_NM     
+              <if test ="searchType == 3">
+                ,(6371 * acos(cos(RADIANS(Y(GIS))) * cos(RADIANS(#{latitude})) * cos(RADIANS(#{longitude}) - RADIANS(X(A.GIS))) + sin(RADIANS(Y(A.GIS))) * sin(RADIANS(#{latitude})))) AS distance  
+              </if>
+              <if test ="searchType != 3">
+                ,'' AS distance  
+              </if>
+            ,X(A.GIS) AS LONGITUDE
+            ,Y(A.GIS) AS LATITUDE
+         FROM COMPANYINFO A
+ 		     ,USERINFO B
+        WHERE A.COMPSEQ = B.COMPSEQ
+          AND B.ADMINYN  = 'Y'
+          AND B.DELYN = 'N'
+         <if test="searchType == 1">
+          AND A.COMPNM like CONCAT('%',#{searchKeyWord},'%')   
+         </if>    
+         <if test="searchType == 2">
+          AND B.USERNM like CONCAT('%',#{searchKeyWord},'%')     
+         </if>
+         <if test="searchType == 3">
+         HAVING distance <![CDATA[<=]]> 0.2   
+         </if> 
+    </select>
+     
+</mapper>
