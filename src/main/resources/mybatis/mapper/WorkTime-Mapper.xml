@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ccw.workStamp.WorkTimeMapper">
+	
+ 	<!--
+	 @ 조회일자의 츨퇴근입력 정보 및 출퇴근승인정보를 출력한다.
+     @author 조창욱
+     @version 1.0
+	  -->
+    <select id="retrieveWorkInfo" parameterType="java.util.HashMap" resultType="com.ccw.workStamp.util.CommonMap">
+        SELECT WORKYMD AS WORK_YMD
+                ,IFNULL(DATE_FORMAT(WORKSTARTTIME,'%Y%m%d'), '') AS WORK_START_YMD
+                ,IFNULL(DATE_FORMAT(WORKSTARTTIME,'%H%i%s'), '') AS WORK_START_TIME
+                ,'' AS WORK_START_APPR_CD
+                ,IFNULL(DATE_FORMAT(WORKENDTIME,'%Y%m%d'), '') AS WORK_END_YMD
+                ,IFNULL(DATE_FORMAT(WORKENDTIME,'%H%i%s'), '') AS WORK_END_TIME
+                ,'' AS WORK_END_APPR_CD
+          FROM WORKINFO
+         WHERE USERSEQ = #{userSeq}
+           AND WORKYMD BETWEEN #{workStartYmd} AND #{workEndYmd};
+    </select>
+    
+     <!--
+	 @ 조회일자에 등록되어 있는 사용자 승인요청정보를 출력한다.
+     @author 조창욱
+     @version 1.0
+	  -->
+    <select id="retrieveApprInfo" parameterType="java.util.HashMap" resultType="com.ccw.workStamp.util.CommonMap">        
+        SELECT *
+         FROM (
+			SELECT MAX(WORKYMD) AS WORK_YMD
+                ,MAX((CASE WHEN STAMPTYPE = 'IN' THEN DATE_FORMAT(WORKTIME,'%Y%m%d') END)) AS WORK_START_YMD
+                ,MAX((CASE WHEN STAMPTYPE = 'IN' THEN DATE_FORMAT(WORKTIME,'%H%i%s') END)) AS WORK_START_TIME
+                ,MAX((CASE WHEN STAMPTYPE = 'IN' THEN APPRCD ELSE '' END)) AS WORK_START_APPR_CD
+                ,MAX((CASE WHEN STAMPTYPE = 'OUT' THEN DATE_FORMAT(WORKTIME,'%Y%m%d') ELSE '' END)) AS WORK_END_YMD
+                ,MAX((CASE WHEN STAMPTYPE = 'OUT' THEN DATE_FORMAT(WORKTIME,'%H%i%s') ELSE ''  END)) AS WORK_END_TIME
+                ,MAX((CASE WHEN STAMPTYPE = 'OUT' THEN APPRCD ELSE ''  END)) AS WORK_END_APPR_CD
+                FROM APPRINFO
+                 WHERE USERSEQ = #{userSeq}
+          AND WORKYMD BETWEEN #{workStartYmd} AND #{workEndYmd}
+          AND APPRCD != 'A') A
+          WHERE A.WORK_YMD IS NOT NULL;
+    </select>
+    
+     <!--
+	 @ 사용자의 일주일 간의 츨퇴근정보를 출력한다.
+     @author 조창욱
+     @version 1.0
+	  -->
+    <select id="retrieveWeekWorkInfo" parameterType="java.util.HashMap" resultType="com.ccw.workStamp.util.CommonMap">
+         SELECT WORKYMD AS WORK_YMD
+              ,IFNULL(DATE_FORMAT(WORKSTARTTIME,'%Y%m%d'),'') AS WORK_START_YMD
+              ,IFNULL(DATE_FORMAT(WORKSTARTTIME,'%H%i%s'),'') AS WORK_START_TIME       
+              ,IFNULL(DATE_FORMAT(WORKENDTIME,'%Y%m%d'),'') AS WORK_END_YMD
+              ,IFNULL(DATE_FORMAT(WORKENDTIME,'%H%i%s'),'') AS WORK_END_TIME
+		      ,IFNULL(TIMESTAMPDIFF(minute, WORKSTARTTIME, WORKENDTIME), 0) AS MINUTE  
+        FROM WORKINFO
+         WHERE USERSEQ = #{userSeq}
+           AND WORKYMD BETWEEN #{workStartYmd} AND #{workEndYmd};
+    </select>
+    
+     <!--
+	 @ 일주일 간의 사용자의 출퇴근승인요청정보를 조회한다.
+     @author 조창욱
+     @version 1.0
+	  -->
+    <select id="retreiveApprList" parameterType="java.util.HashMap" resultType="com.ccw.workStamp.util.CommonMap">
+         SELECT A.USERSEQ AS USER_SEQ
+              ,A.USERNM AS USER_NM
+              ,B.WORKYMD AS WORK_YMD
+              ,B.STAMPTYPE AS STAMP_TYPE
+              ,DATE_FORMAT(B.WORKTIME, '%Y-%m-%d %H:%i:%s') AS WORK_DATE_TIME
+              ,DATE_FORMAT(B.WORKTIME, '%Y-%m-%d') AS WORK_DATE
+              ,DATE_FORMAT(B.WORKTIME, '%H:%i:%s') AS WORK_TIME
+              ,B.NONUSEAUTOCD AS NON_USE_AUTO_CD
+              ,B.APPRCD AS APPR_CD
+          FROM USERINFO A
+              ,APPRINFO B
+         WHERE A.USERSEQ = B.USERSEQ
+           AND B.WORKYMD between #{workStartYmd} and #{workEndYmd}
+           <if test ='adminYn == "Y"'>
+           AND A.COMPSEQ = (SELECT Z.COMPSEQ FROM USERINFO Z WHERE Z.USERSEQ = #{userSeq}) 
+           </if>
+           <if test ='adminYn == "N"'>
+           AND A.USERSEQ = #{userSeq} 
+           </if>   
+           <if test ="apprCd != null and apprCd != ''">
+	       AND B.APPRCD = #{apprCd};
+           </if>
+    </select>
+        
+     <!--
+	 @ 등록되어 있는 승인요청정보를 삭제한다.
+     @author 조창욱
+     @version 1.0
+	  -->    
+    <delete id="deleteApprInfo">
+        DELETE FROM APPRINFO
+         WHERE USERSEQ = #{userSeq}
+           AND WORKYMD = #{workYmd}
+           AND STAMPTYPE = #{stampType}
+	       AND APPRCD IN ('R', 'T');
+    </delete>
+    
+     <!--
+	 @ 현재시간을 기준으로 출퇴근등록한다.
+     @author 조창욱
+     @version 1.0
+	  -->  
+    <insert id="registWorkInfo">
+        
+        INSERT INTO WORKINFO(
+            WORKYMD
+            ,USERSEQ
+             <if test ="stampType == 'IN'">
+               ,WORKSTARTTIME     
+            </if>
+            <if test ="stampType == 'OUT'">
+               ,WORKENDTIME     
+            </if>
+        ) VALUES (
+            #{workYmd}
+            ,#{userSeq}
+            <if test ="workTime == null">
+            ,SYSDATE()
+            </if>
+            <if test ="workTime != null">
+            ,#{workTime}
+            </if>
+        )
+        ON DUPLICATE KEY UPDATE 
+        <if test ="stampType == 'IN' and workTime == null">
+            WORKSTARTTIME = SYSDATE();  
+        </if>
+        <if test ="stampType == 'OUT' and workTime == null">
+            WORKENDTIME = SYSDATE();       
+        </if>
+         <if test ="stampType == 'IN' and workTime != null">
+            WORKSTARTTIME = #{workTime}  
+        </if>
+        <if test ="stampType == 'OUT' and workTime != null">
+            WORKENDTIME = #{workTime}       
+        </if>
+        
+    </insert>
+    
+     <!--
+	 @ 사용자가 입력한 시간을 기준으로 출퇴근승인요청을 등록한다.
+     @author 조창욱
+     @version 1.0
+	  --> 
+    <insert id="registApprInfo">
+    
+        INSERT INTO APPRINFO(
+            USERSEQ
+            ,WORKYMD
+            ,STAMPTYPE
+            ,REQUESTTIME
+            ,WORKTIME
+            ,NONUSEAUTOCD
+            ,APPRCD 
+        ) VALUES (
+            #{userSeq}
+           ,#{workYmd}
+           ,#{stampType}
+           ,SYSDATE()
+           ,#{workTime}
+           ,#{nonUseAutoCd}
+           ,'R'
+        )
+        ON DUPLICATE KEY UPDATE
+            REQUESTTIME = SYSDATE()
+           ,WORKTIME = #{workTime}
+           ,NONUSEAUTOCD = #{nonUseAutoCd}
+           ,APPRCD = 'R';
+        
+    </insert>
+    
+     <!--
+	 @ 사용자의 출퇴근승인요청을 승인 혹은 반려한다.
+     @author 조창욱
+     @version 1.0
+	  --> 
+    <update id = "updateApprInfo">
+        UPDATE APPRINFO SET
+         APPRCD = #{apprCd}
+        WHERE USERSEQ = #{userSeq}
+          AND WORKYMD = #{workYmd}
+          AND STAMPTYPE = #{stampType};
+    </update>
+    
+     <!--
+	 @ 사용자의 일주일간의 출퇴근 정보 및 총근무시간을 조회한다.
+     @author 조창욱
+     @version 1.0
+	  --> 
+    <select id="retrieveEmpWorkInfoList" parameterType="java.util.HashMap" resultType="com.ccw.workStamp.util.CommonMap">
+        SELECT A.USERSEQ AS USER_SEQ
+             ,A.USERNM AS USER_NM
+             ,IFNULL(group_concat(case WHEN B.WORKYMD = #{day0} THEN DATE_FORMAT(B.WORKSTARTTIME, '%H%i%s') END), '') DAY_0_START
+             ,IFNULL(group_concat(case WHEN B.WORKYMD = #{day0} THEN DATE_FORMAT(B.WORKENDTIME, '%H%i%s') END), '') DAY_0_END
+             ,IFNULL(group_concat(case WHEN B.WORKYMD = #{day1} THEN DATE_FORMAT(B.WORKSTARTTIME, '%H%i%s') END), '') DAY_1_START
+             ,IFNULL(group_concat(case WHEN B.WORKYMD = #{day1} THEN DATE_FORMAT(B.WORKENDTIME, '%H%i%s') END), '') DAY_1_END
+             ,IFNULL(group_concat(case WHEN B.WORKYMD = #{day2} THEN DATE_FORMAT(B.WORKSTARTTIME, '%H%i%s') END), '') DAY_2_START
+             ,IFNULL(group_concat(case WHEN B.WORKYMD = #{day2} THEN DATE_FORMAT(B.WORKENDTIME, '%H%i%s') END), '') DAY_2_END
+             ,IFNULL(group_concat(case WHEN B.WORKYMD = #{day3} THEN DATE_FORMAT(B.WORKSTARTTIME, '%H%i%s') END), '') DAY_3_START
+             ,IFNULL(group_concat(case WHEN B.WORKYMD = #{day3} THEN DATE_FORMAT(B.WORKENDTIME, '%H%i%s') END), '') DAY_3_END
+             ,IFNULL(group_concat(case WHEN B.WORKYMD = #{day4} THEN DATE_FORMAT(B.WORKSTARTTIME, '%H%i%s') END), '') DAY_4_START
+             ,IFNULL(group_concat(case WHEN B.WORKYMD = #{day4} THEN DATE_FORMAT(B.WORKENDTIME, '%H%i%s') END), '') DAY_4_END
+             ,IFNULL(group_concat(case WHEN B.WORKYMD = #{day5} THEN DATE_FORMAT(B.WORKSTARTTIME, '%H%i%s') END), '') DAY_5_START
+             ,IFNULL(group_concat(case WHEN B.WORKYMD = #{day5} THEN DATE_FORMAT(B.WORKENDTIME, '%H%i%s') END), '') DAY_5_END
+             ,IFNULL(group_concat(case WHEN B.WORKYMD = #{day6} THEN DATE_FORMAT(B.WORKSTARTTIME, '%H%i%s') END), '') DAY_6_START
+             ,IFNULL(group_concat(case WHEN B.WORKYMD = #{day6} THEN DATE_FORMAT(B.WORKENDTIME, '%H%i%s') END), '') DAY_6_END
+             , (
+                 IFNULL(GROUP_CONCAT(CASE WHEN B.WORKYMD = #{day0} THEN TIMESTAMPDIFF(MINUTE,B.WORKSTARTTIME,B.WORKENDTIME) END), 0)
+                +IFNULL(GROUP_CONCAT(CASE WHEN B.WORKYMD = #{day1} THEN TIMESTAMPDIFF(MINUTE,B.WORKSTARTTIME,B.WORKENDTIME) END), 0)
+                +IFNULL(GROUP_CONCAT(CASE WHEN B.WORKYMD = #{day2} THEN TIMESTAMPDIFF(MINUTE,B.WORKSTARTTIME,B.WORKENDTIME) END), 0)
+                +IFNULL(GROUP_CONCAT(CASE WHEN B.WORKYMD = #{day3} THEN TIMESTAMPDIFF(MINUTE,B.WORKSTARTTIME,B.WORKENDTIME) END), 0)
+                +IFNULL(GROUP_CONCAT(CASE WHEN B.WORKYMD = #{day4} THEN TIMESTAMPDIFF(MINUTE,B.WORKSTARTTIME,B.WORKENDTIME) END), 0)
+                +IFNULL(GROUP_CONCAT(CASE WHEN B.WORKYMD = #{day5} THEN TIMESTAMPDIFF(MINUTE,B.WORKSTARTTIME,B.WORKENDTIME) END), 0)
+                +IFNULL(GROUP_CONCAT(CASE WHEN B.WORKYMD = #{day6} THEN TIMESTAMPDIFF(MINUTE,B.WORKSTARTTIME,B.WORKENDTIME) END), 0)
+                ) AS TOTAL
+         FROM USERINFO A
+	         ,WORKINFO B
+        WHERE A.USERSEQ = B.USERSEQ
+          AND A.COMPSEQ = (SELECT Z.COMPSEQ FROM USERINFO Z WHERE Z.USERSEQ = #{userSeq})
+          AND B.WORKYMD BETWEEN #{day0} AND #{day6}
+        GROUP BY A.USERSEQ
+
+
+    </select>
+    
+     <!--
+	 @ 해당 근무처에 등록된 사용자들을 조회한다.
+     @author 조창욱
+     @version 1.0
+	  -->
+    <select id="retrieveEmpInfoList" parameterType="java.util.HashMap" resultType="com.ccw.workStamp.util.CommonMap">
+        SELECT USERSEQ AS USER_SEQ	
+              ,USERNM AS USER_NM
+          FROM USERINFO
+         WHERE COMPSEQ = (SELECT Z.COMPSEQ FROM USERINFO Z WHERE Z.USERSEQ = #{userSeq})
+           AND DELYN = 'N'
+    </select>
+    
+    
+</mapper>

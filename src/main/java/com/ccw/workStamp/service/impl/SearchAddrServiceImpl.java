@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +26,10 @@ import org.json.simple.parser.JSONParser;
 @Transactional(rollbackFor = {Exception.class, BusinessException.class})
 public class SearchAddrServiceImpl implements SearchAddrService{
     
-    private static final String addrKey = "";
-    private static final String kakaokey = "";
+	@Value("${api.addr}")
+    private String ADDR_KEY;
+	@Value("${api.kakao}")
+    private String KAKAO_KEY;
     private static final int TIMEOUT_VALUE = 5000;   // 5초
  
     /**
@@ -52,7 +55,7 @@ public class SearchAddrServiceImpl implements SearchAddrService{
                         +"currentPage="+currentPage
                         +"&countPerPage="+countPerPage
                         +"&keyword="+URLEncoder.encode(keyword,"UTF-8")
-                        +"&confmKey="+addrKey
+                        +"&confmKey="+ADDR_KEY
                         +"&resultType=json";
             
         URL url = new URL(apiUrl);
@@ -128,7 +131,7 @@ public class SearchAddrServiceImpl implements SearchAddrService{
         urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         urlConnection.setRequestProperty("User-Agent", "Java-Client");	// https 호출시 user-agent 필요
         urlConnection.setRequestProperty("X-Requested-With", "curl");
-        urlConnection.setRequestProperty("Authorization", kakaokey);
+        urlConnection.setRequestProperty("Authorization", KAKAO_KEY);
         urlConnection.setDoInput(true);
         
         if( urlConnection.getResponseCode()== HttpURLConnection.HTTP_OK) {
@@ -195,8 +198,11 @@ public class SearchAddrServiceImpl implements SearchAddrService{
         urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         urlConnection.setRequestProperty("User-Agent", "Java-Client");	// https 호출시 user-agent 필요
         urlConnection.setRequestProperty("X-Requested-With", "curl");
-        urlConnection.setRequestProperty("Authorization", kakaokey);
+        urlConnection.setRequestProperty("Authorization", KAKAO_KEY);
         urlConnection.setDoInput(true);
+        
+        System.out.println("ADDR_KEY :"+ ADDR_KEY);
+        System.out.println("KAKAO_KEY :"+ KAKAO_KEY);
         
         if( urlConnection.getResponseCode()== HttpURLConnection.HTTP_OK) {
              dis= urlConnection.getInputStream();
