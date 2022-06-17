@@ -3,8 +3,10 @@
 <mapper namespace="com.ccw.workStamp.WorkTimeMapper">
 	
  	<!--
-	 @ 조회일자의 츨퇴근입력 정보 및 출퇴근승인정보를 출력한다.
-     @author 조창욱
+     検索日の通勤情報及び通勤承認情報を検討する
+
+	 조회일자의 츨퇴근입력 정보 및 출퇴근승인정보를 출력한다.
+     @author ジョチャンウク／조창욱
      @version 1.0
 	  -->
     <select id="retrieveWorkInfo" parameterType="java.util.HashMap" resultType="com.ccw.workStamp.util.CommonMap">
@@ -21,8 +23,10 @@
     </select>
     
      <!--
-	 @ 조회일자에 등록되어 있는 사용자 승인요청정보를 출력한다.
-     @author 조창욱
+	 検索日に登録したユーザーの承認要請情報を検索する
+     
+     조회일자에 등록되어 있는 사용자 승인요청정보를 출력한다.
+     @author ジョチャンウク／조창욱
      @version 1.0
 	  -->
     <select id="retrieveApprInfo" parameterType="java.util.HashMap" resultType="com.ccw.workStamp.util.CommonMap">        
@@ -43,8 +47,10 @@
     </select>
     
      <!--
-	 @ 사용자의 일주일 간의 츨퇴근정보를 출력한다.
-     @author 조창욱
+    　週間通勤情報を検討する
+	 　
+     일주일 간의 츨퇴근정보를 출력한다.
+     @author ジョチャンウク／조창욱
      @version 1.0
 	  -->
     <select id="retrieveWeekWorkInfo" parameterType="java.util.HashMap" resultType="com.ccw.workStamp.util.CommonMap">
@@ -60,8 +66,10 @@
     </select>
     
      <!--
-	 @ 일주일 간의 사용자의 출퇴근승인요청정보를 조회한다.
-     @author 조창욱
+	 一週間のユーザーの出・退勤承認要請情報を検索する
+     
+     일주일 간의 사용자의 출퇴근승인요청정보를 조회한다.
+     @author ジョチャンウク／조창욱
      @version 1.0
 	  -->
     <select id="retreiveApprList" parameterType="java.util.HashMap" resultType="com.ccw.workStamp.util.CommonMap">
@@ -90,8 +98,10 @@
     </select>
         
      <!--
-	 @ 등록되어 있는 승인요청정보를 삭제한다.
-     @author 조창욱
+	 登録されている承認要請情報を消す
+
+     등록되어 있는 승인요청정보를 삭제한다.
+     @author ジョチャンウク／조창욱
      @version 1.0
 	  -->    
     <delete id="deleteApprInfo">
@@ -103,8 +113,10 @@
     </delete>
     
      <!--
-	 @ 현재시간을 기준으로 출퇴근등록한다.
-     @author 조창욱
+	 現在の時間をもとに出・退勤登録する
+     
+     현재시간을 기준으로 출퇴근등록한다.
+     @author ジョチャンウク／조창욱
      @version 1.0
 	  -->  
     <insert id="registWorkInfo">
@@ -145,8 +157,10 @@
     </insert>
     
      <!--
-	 @ 사용자가 입력한 시간을 기준으로 출퇴근승인요청을 등록한다.
-     @author 조창욱
+	 ユーザーが入力した時間ををもとに出・退勤承認要請をする
+
+     사용자가 입력한 시간을 기준으로 출퇴근승인요청을 등록한다.
+     @author ジョチャンウク／조창욱
      @version 1.0
 	  --> 
     <insert id="registApprInfo">
@@ -177,8 +191,10 @@
     </insert>
     
      <!--
-	 @ 사용자의 출퇴근승인요청을 승인 혹은 반려한다.
-     @author 조창욱
+	 ユーザーの出・退勤承認要請を承認又は拒否する
+
+     사용자의 출퇴근승인요청을 승인 혹은 반려한다.
+     @author ジョチャンウク／조창욱
      @version 1.0
 	  --> 
     <update id = "updateApprInfo">
@@ -190,8 +206,10 @@
     </update>
     
      <!--
-	 @ 사용자의 일주일간의 출퇴근 정보 및 총근무시간을 조회한다.
-     @author 조창욱
+    　ユーザーの一週間の出・退勤情報及び合計勤務時間を検討する
+
+	 사용자의 일주일간의 출퇴근 정보 및 총근무시간을 조회한다.
+     @author ジョチャンウク／조창욱
      @version 1.0
 	  --> 
     <select id="retrieveEmpWorkInfoList" parameterType="java.util.HashMap" resultType="com.ccw.workStamp.util.CommonMap">
@@ -231,8 +249,10 @@
     </select>
     
      <!--
-	 @ 해당 근무처에 등록된 사용자들을 조회한다.
-     @author 조창욱
+	 所属している勤務先の登録ユーザーを検索する
+
+     해당 근무처에 등록된 사용자들을 조회한다.
+     @author ジョチャンウク／조창욱
      @version 1.0
 	  -->
     <select id="retrieveEmpInfoList" parameterType="java.util.HashMap" resultType="com.ccw.workStamp.util.CommonMap">

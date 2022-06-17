@@ -25,13 +25,20 @@ public class SignUpServiceImpl implements SignUpService{
 	private final static String signUpMapper = "com.ccw.workStamp.SignUpMapper";
        
     /**
-     * 입력받은 회원정보를 바탕으로 workStamp APP의 사용자를 등록한다.
+     * 入力した会員情報をもとにworkStamp APPの会員登録する。
+     *   
+     * 입력한 회원정보를 바탕으로 workStamp APP의 사용자를 등록한다.
      * 
-     * @author 조창욱
+     * @author ジョチャンウク／조창욱
      * @version 1.0
-     * @param SNS종류, SNS로그인일련번호, 사용자명, 회사정보
-     * @return SNS종류, SNS로그인일련번호, 사용자명, 회사정보, 사용자일련번호
-     * @exception 서버가 정의한 bussinessException이 일어나는 경우 rsltCd는 -1, errMsg는 bussinessExaption의 메시지를 반환
+     * @param ソーシャルメディアのタイプ、UID、ユーザー名、会社情報
+     * 　　　　 SNS종류, SNS로그인일련번호, 사용자명, 회사정보
+     * @return ソーシャルメディアのタイプ、UID、ユーザー名、会社情報、ユーザーシーケンス
+     　　　　　　SNS종류, SNS로그인일련번호, 사용자명, 회사정보, 사용자일련번호
+     * @exception　サーバーで定期したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
+     *          　思わなかったExceptionが起こる場合はrsltCdは-1、errMsgはじてい指定されたメッセージをリターン
+     * 
+     *             서버가 정의한 bussinessException이 일어나는 경우 rsltCd는 -1, errMsg는 bussinessExaption의 메시지를 반환
      *            의도치 않은 Exception이 일어나는 경우 rsltCd는 -1, errMsg는 지정된 메시지를 반환 
      * 
      **/

@@ -3,8 +3,10 @@
 <mapper namespace="com.ccw.workStamp.SignUpMapper">
 	
 	<!--
-	 @ 관리자의 회원가입 시 회사정보도 함께 등록되며 회사등록으로 생성된다.
-     @author 조창욱
+	 　管理者の会員登録の場合、会社情報も一緒に登録される
+
+   　관리자의 회원가입 시 회사정보도 함께 등록되며 회사등록으로 생성된다.
+     @author ジョチャンウク/조창욱
      @version 1.0
 	  -->
     <insert id="insertCompanyInfo"  useGeneratedKeys="true" keyProperty="compSeq">
@@ -29,8 +31,10 @@
     </insert>
     
     <!--
-	 @ 해당 관리자, 사용자를 회원등록한다.
-     @author 조창욱
+	 　管理者, ユーザーを会員登録する
+     
+     관리자, 사용자를 회원등록한다
+     @author ジョチャンウク／조창욱
      @version 1.0
 	  -->
     <insert id="insertUserInfo" useGeneratedKeys="true" keyProperty="userSeq">
@@ -57,8 +61,10 @@
     </insert>
     
      <!--
-	 @ 회원등록 전에 해당 사용자가 기등록되어 있는지 조회한다.
-     @author 조창욱
+	   会員登録する前にそのユーザーが既に登録されているのかチェックする
+     
+     회원등록 전에 해당 사용자가 기등록되어 있는지 조회한다.
+     @author ジョチャンウク／조창욱
      @version 1.0
 	  -->
     <select id="retrieveRegistCnt" resultType="INTEGER">
@@ -70,9 +76,12 @@
     </select>
     
      <!--
-	 @ 입력된 조건에 맞는 등록된 회사정보를 조회한다. 현재위치(searchType == 3)로 검색 시에는 
-	 반경 200m 이내에 등록된 회사들을 찾으며, 개인정보 보호를 위해 관리자 이름의 가운데는 '*'로 블라인드 처리한다.
-     @author 조창욱
+	   入力された条件に合う会社情報を検索する。現在の位置(searchType == 3)で検索した場合は
+     半径200m以内に登録された会社を探し、個人情報保護のために管理者の名前の一部は'*'でブラインド処理する。
+     
+     입력된 조건에 맞는 등록된 회사정보를 조회한다. 현재위치(searchType == 3)로 검색 시에는 
+	   반경 200m 이내에 등록된 회사들을 찾으며, 개인정보 보호를 위해 관리자 이름의 가운데는 '*'로 블라인드 처리한다.
+     @author ジョチャンウク／조창욱
      @version 1.0
 	  -->
      <select id="retrieveCompanyInfo" parameterType="java.util.HashMap" resultType="com.ccw.workStamp.util.CommonMap">

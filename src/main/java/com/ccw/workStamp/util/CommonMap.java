@@ -7,9 +7,11 @@ public class CommonMap extends ListOrderedMap{
     private static final long serialVersionUID = 1L;
     
     /**
+     * SQLのSELECT結果のMapのkeyをcamel表記に変換する
+     * 
      * SQL 조회결과가 담긴 Map의 key값을 camel표기법의 형식으로 재정의한다. 
      * 
-     * @author 조창욱
+     * @author ジョチャンウク／조창욱
      * @version 1.0
      * 
      **/

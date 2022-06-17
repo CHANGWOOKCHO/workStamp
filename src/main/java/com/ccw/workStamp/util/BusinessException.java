@@ -6,6 +6,8 @@ public class BusinessException extends Exception {
 	private static final long serialVersionUID = -357843356921318530L;
 	
     /**
+     * サービス内で定義した例外事項をBusinessExceptionだと定義して別のcatch分で処理できるようにする
+     *  
      * 서비스가 정의한 예외사항을 BusinessException라 정의하여 별도의 catch문에서 처리될 수 있도록 한다. 
      * 
      * @author 조창욱
