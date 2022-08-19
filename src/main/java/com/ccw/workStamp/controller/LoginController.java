@@ -43,7 +43,7 @@ public class LoginController {
      * @return ユーザーシーケンス、ユーザー名、社員番号、会員情報(郵便番号、基本住所、詳細住所、位置座標)
      *
      *         사용자일련번호, 사용자이름, 사용자사원번호, 회사주소정보(우편번호, 기본주소, 상세주소, 위치좌표) 
-     * @exception　サーバーで定期したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
+     * @exception　サーバーで定義したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
      *          　思わなかったExceptionが起こる場合はrsltCdは-1、errMsgはじてい指定されたメッセージをリターン
      *
      *            서버가 정의한 bussinessException이 일어나는 경우 rsltCd는 -1, errMsg는 bussinessExaption의 메시지를 반환
