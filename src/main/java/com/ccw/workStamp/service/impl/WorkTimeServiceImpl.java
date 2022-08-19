@@ -39,7 +39,7 @@ public class WorkTimeServiceImpl implements WorkTimeService {
    * 　　　　사용자일련번호, 조회일자
    * @return 出勤時間、退勤時間、出勤承認情報、退勤承認情報
    * 　　　　　출근시간, 퇴근시간, 출근승인상태, 퇴근승인상태
-   * @exception　サーバーで定期したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
+   * @exception　サーバーで定義したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
    *          　思わなかったExceptionが起こる場合はrsltCdは-1、errMsgはじてい指定されたメッセージをリターン
    * 
    *             서버가 정의한 bussinessException이 일어나는 경우 rsltCd는 -1, errMsg는 bussinessExaption의 메시지를 반환
@@ -99,7 +99,7 @@ public class WorkTimeServiceImpl implements WorkTimeService {
    *        사용자일련번호, 조회시작일자, 조회종료일자
    * @return 勤務日、出勤時間、退勤時間
    *　　　　　근무일, 출근시간, 퇴근시간
-   * @exception　サーバーで定期したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
+   * @exception　サーバーで定義したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
    *          　思わなかったExceptionが起こる場合はrsltCdは-1、errMsgはじてい指定されたメッセージをリターン
    * 
    *             서버가 정의한 bussinessException이 일어나는 경우 rsltCd는 -1, errMsg는 bussinessExaption의 메시지를 반환
@@ -133,7 +133,7 @@ public class WorkTimeServiceImpl implements WorkTimeService {
    * @param ユーザーシーケンス、勤務日
    *　　　　　사용자일련번호, 근무일자
    * @return N／A
-   * @exception　サーバーで定期したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
+   * @exception　サーバーで定義したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
    *          　思わなかったExceptionが起こる場合はrsltCdは-1、errMsgはじてい指定されたメッセージをリターン
    * 
    *             서버가 정의한 bussinessException이 일어나는 경우 rsltCd는 -1, errMsg는 bussinessExaption의 메시지를 반환
@@ -165,7 +165,7 @@ public class WorkTimeServiceImpl implements WorkTimeService {
    *　　　　　사용자일련번호, 조회시작일, 조회종료일
    * @return ユーザー名、勤務日、出・退勤分類、出・退勤時間、要請理由、承認状態
    * 　　　　　사용자명, 근무일, 출퇴근구분, 출퇴근시간, 요청사유, 승인상태
-   * @exception　サーバーで定期したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
+   * @exception　サーバーで定義したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
    *          　思わなかったExceptionが起こる場合はrsltCdは-1、errMsgはじてい指定されたメッセージをリターン
    * 
    *             서버가 정의한 bussinessException이 일어나는 경우 rsltCd는 -1, errMsg는 bussinessExaption의 메시지를 반환
@@ -186,7 +186,7 @@ public class WorkTimeServiceImpl implements WorkTimeService {
    * @param 사용자일련번호, 출퇴근구분, 출퇴근일시, 승인상태
    *　　　　　ユーザーシーケンス、出・退勤分類、出・退勤日時、承認状態
    * @return N／A
-   * @exception　サーバーで定期したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
+   * @exception　サーバーで定義したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
    *          　思わなかったExceptionが起こる場合はrsltCdは-1、errMsgはじてい指定されたメッセージをリターン
    * 
    *             서버가 정의한 bussinessException이 일어나는 경우 rsltCd는 -1, errMsg는 bussinessExaption의 메시지를 반환
@@ -222,7 +222,7 @@ public class WorkTimeServiceImpl implements WorkTimeService {
    *　　　　사용자일련번호, 조회시작일, 조회종료일
    * @return ユーザー名、日~土出勤時間、日~土退勤時間
    *　　　　　사용자명, 일~토 출근시간, 일~토 퇴근시간
-   * @exception　サーバーで定期したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
+   * @exception　サーバーで定義したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
    *          　思わなかったExceptionが起こる場合はrsltCdは-1、errMsgはじてい指定されたメッセージをリターン
    * 
    *             서버가 정의한 bussinessException이 일어나는 경우 rsltCd는 -1, errMsg는 bussinessExaption의 메시지를 반환
