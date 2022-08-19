@@ -17,7 +17,7 @@ public interface SignUpService {
      * 　　　　 SNS종류, SNS로그인일련번호, 사용자명, 회사정보
      * @return ソーシャルメディアのタイプ、UID、ユーザー名、会社情報、ユーザーシーケンス
      　　　　　　SNS종류, SNS로그인일련번호, 사용자명, 회사정보, 사용자일련번호
-     * @exception　サーバーで定期したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
+     * @exception　サーバーで定義したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
      *          　思わなかったExceptionが起こる場合はrsltCdは-1、errMsgはじてい指定されたメッセージをリターン
      * 
      *             서버가 정의한 bussinessException이 일어나는 경우 rsltCd는 -1, errMsg는 bussinessExaption의 메시지를 반환
@@ -39,7 +39,7 @@ public interface SignUpService {
      * 　　　 검색조건, 키워드, 현재 위도 및 경도 　　　　
      * @return 会社シーケンス、会社名、管理者名、チーム名、会社住所情報
      *  　　　　회사일련번호,회사명, 관리자명, 부서명, 회사주소정보　　　
-     * @exception　サーバーで定期したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
+     * @exception　サーバーで定義したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
      *          　思わなかったExceptionが起こる場合はrsltCdは-1、errMsgはじてい指定されたメッセージをリターン
      * 
      *             서버가 정의한 bussinessException이 일어나는 경우 rsltCd는 -1, errMsg는 bussinessExaption의 메시지를 반환
