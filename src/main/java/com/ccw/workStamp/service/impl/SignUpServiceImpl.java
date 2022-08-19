@@ -35,7 +35,7 @@ public class SignUpServiceImpl implements SignUpService{
      * 　　　　 SNS종류, SNS로그인일련번호, 사용자명, 회사정보
      * @return ソーシャルメディアのタイプ、UID、ユーザー名、会社情報、ユーザーシーケンス
      　　　　　　SNS종류, SNS로그인일련번호, 사용자명, 회사정보, 사용자일련번호
-     * @exception　サーバーで定期したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
+     * @exception　サーバーで定義したbussinessExceptionが起こる場合はrsltCdは-1、errMsgはbussinessExaptionのメッセージをリターン
      *          　思わなかったExceptionが起こる場合はrsltCdは-1、errMsgはじてい指定されたメッセージをリターン
      * 
      *             서버가 정의한 bussinessException이 일어나는 경우 rsltCd는 -1, errMsg는 bussinessExaption의 메시지를 반환
